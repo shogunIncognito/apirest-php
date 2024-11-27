@@ -8,7 +8,7 @@ class UserController
         $service = new UserService();
         $users = $service->getAllUsers();
 
-        echo json_encode($users);
+        $this->sendResponse(200, $users);
     }
 
     public function getUserById($id)
@@ -16,7 +16,7 @@ class UserController
         $service = new UserService();
         $user = $service->getUserById($id);
 
-        echo json_encode($user);
+        $this->sendResponse(200, $user);
     }
 
     public function createUser()
@@ -27,8 +27,8 @@ class UserController
         $service = new UserService();
         $result = $service->createUser($values);
 
-        echo json_encode([
-            "success" => true,
+        $this->sendResponse(201, [
+            "error" => false,
             "response" => $result
         ]);
     }
@@ -40,8 +40,8 @@ class UserController
         $service = new UserService();
         $result = $service->updateUser($id, $values);
 
-        echo json_encode([
-            "success" => true,
+        $this->sendResponse(201, [
+            "error" => false,
             "response" => $result
         ]);
     }
@@ -51,9 +51,16 @@ class UserController
         $service = new UserService();
         $result = $service->deleteUserById($id);
 
-        echo json_encode([
-            "success" => true,
+        $this->sendResponse(201, [
+            "error" => false,
             "response" => $result
         ]);
+    }
+
+    private function sendResponse($status, $data)
+    {
+        http_response_code($status);
+        echo json_encode($data);
+        exit;
     }
 }
