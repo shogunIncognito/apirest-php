@@ -49,13 +49,26 @@ class User
             $values["lastname"],
             $values["age"],
             $values["email"],
-            $values[$id]
+            $id
         ]);
 
         if ($query->rowCount() > 0) {
             return "User updated succesfully";
         } else {
             return "No changes made or user not found";
+        }
+    }
+
+    public static function deleteUserById($id)
+    {
+        $conn = Database::getConnection();
+        $query = $conn->prepare("DELETE FROM users WHERE id = ?");
+        $query->execute([$id]);
+
+        if ($query->rowCount() > 0) {
+            return 'User deleted';
+        } else {
+            return 'User not found';
         }
     }
 }

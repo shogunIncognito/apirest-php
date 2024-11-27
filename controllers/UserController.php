@@ -35,10 +35,21 @@ class UserController
 
     public function updateUser($id)
     {
-        $values = json_encode(file_get_contents('php://input'));
+        $values = json_decode(file_get_contents('php://input'), true);
 
         $service = new UserService();
         $result = $service->updateUser($id, $values);
+
+        echo json_encode([
+            "success" => true,
+            "response" => $result
+        ]);
+    }
+
+    public function deleteUserById($id)
+    {
+        $service = new UserService();
+        $result = $service->deleteUserById($id);
 
         echo json_encode([
             "success" => true,

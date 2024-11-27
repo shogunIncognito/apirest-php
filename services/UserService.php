@@ -22,4 +22,9 @@ class UserService
     {
         return User::updateUser($id, $values);
     }
+
+    public function deleteUserById($id)
+    {
+        return User::deleteUserById($id);
+    }
 }
