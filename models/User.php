@@ -18,11 +18,6 @@ class User
 
         $user = $query->fetch();
 
-        if (!$user) {
-            http_response_code(404);
-            return "User not found";
-        }
-
         return $user;
     }
 
@@ -43,6 +38,16 @@ class User
     public static function updateUser($id, $values)
     {
         $conn = Database::getConnection();
+
+        // verificar si existe el usuario
+        $userQuery = $conn->prepare("SELECT * FROM users WHERE id = ?");
+        $userQuery->execute([$id]);
+        $userExist = $userQuery->fetch();
+
+        if (!$userExist) {
+            return null;
+        }
+
         $query = $conn->prepare("UPDATE users SET firstname = ?, lastname = ?, age = ?, email = ? WHERE id = ?");
         $query->execute([
             $values["firstname"],
@@ -52,11 +57,7 @@ class User
             $id
         ]);
 
-        if ($query->rowCount() > 0) {
-            return "User updated succesfully";
-        } else {
-            return "No changes made or user not found";
-        }
+        return $query->rowCount() > 0 ? 'User updated' : 'No changes made';
     }
 
     public static function deleteUserById($id)
@@ -65,10 +66,6 @@ class User
         $query = $conn->prepare("DELETE FROM users WHERE id = ?");
         $query->execute([$id]);
 
-        if ($query->rowCount() > 0) {
-            return 'User deleted';
-        } else {
-            return 'User not found';
-        }
+        $query->rowCount() > 0 ? 'User deleted' : null;
     }
 }

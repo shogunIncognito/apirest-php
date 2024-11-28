@@ -13,48 +13,76 @@ class UserController
 
     public function getUserById($id)
     {
-        $service = new UserService();
-        $user = $service->getUserById($id);
+        try {
+            $service = new UserService();
+            $user = $service->getUserById($id);
 
-        $this->sendResponse(200, $user);
+            $this->sendResponse(200, $user);
+        } catch (Exception $e) {
+            $this->sendResponse($e->getCode(), [
+                "error" => true,
+                "message" => $e->getMessage()
+            ]);
+        }
     }
 
     public function createUser()
     {
-        $input = file_get_contents('php://input');
-        $values = json_decode($input, true);
+        try {
+            $input = file_get_contents('php://input');
+            $values = json_decode($input, true);
 
-        $service = new UserService();
-        $result = $service->createUser($values);
+            $service = new UserService();
+            $result = $service->createUser($values);
 
-        $this->sendResponse(201, [
-            "error" => false,
-            "response" => $result
-        ]);
+            $this->sendResponse(201, [
+                "error" => false,
+                "response" => $result
+            ]);
+        } catch (Exception $e) {
+            $this->sendResponse($e->getCode(), [
+                "error" => true,
+                "message" => $e->getMessage()
+            ]);
+        }
     }
 
     public function updateUser($id)
     {
-        $values = json_decode(file_get_contents('php://input'), true);
+        try {
+            $values = json_decode(file_get_contents('php://input'), true);
 
-        $service = new UserService();
-        $result = $service->updateUser($id, $values);
+            $service = new UserService();
+            $result = $service->updateUser($id, $values);
 
-        $this->sendResponse(201, [
-            "error" => false,
-            "response" => $result
-        ]);
+            $this->sendResponse(201, [
+                "error" => false,
+                "response" => $result
+            ]);
+        } catch (Exception $e) {
+            $this->sendResponse($e->getCode(), [
+                "error" => true,
+                "message" => $e->getMessage()
+            ]);
+        }
     }
 
     public function deleteUserById($id)
     {
-        $service = new UserService();
-        $result = $service->deleteUserById($id);
+        try {
+            $service = new UserService();
+            $result = $service->deleteUserById($id);
 
-        $this->sendResponse(201, [
-            "error" => false,
-            "response" => $result
-        ]);
+            $this->sendResponse(201, [
+                "error" => false,
+                "response" => $result
+            ]);
+        } catch (Exception $e) {
+            $this->sendResponse($e->getCode(), [
+                "error" => true,
+                "message" => $e->getMessage()
+            ]);
+        }
     }
 
     private function sendResponse($status, $data)
